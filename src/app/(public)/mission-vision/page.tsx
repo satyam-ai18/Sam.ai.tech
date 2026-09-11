@@ -13,10 +13,18 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function MissionVisionPage() {
-  const [mission, vision] = await Promise.all([
-    prisma.aboutSection.findUnique({ where: { key: 'mission' } }),
-    prisma.aboutSection.findUnique({ where: { key: 'vision' } }),
-  ])
+  let mission = null
+  let vision = null
+  try {
+    const res = await Promise.all([
+      prisma.aboutSection.findUnique({ where: { key: 'mission' } }),
+      prisma.aboutSection.findUnique({ where: { key: 'vision' } }),
+    ])
+    mission = res[0]
+    vision = res[1]
+  } catch (error) {
+    console.warn('DB not available for MissionVisionPage, using defaults:', error)
+  }
 
   return (
     <main>

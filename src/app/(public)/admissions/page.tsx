@@ -11,9 +11,13 @@ export const metadata: Metadata = {
 }
 
 async function getAdmissionSettings() {
-  const settings = await prisma.setting.findMany({ where: { group: 'admission' } })
   const map: Record<string, string> = {}
-  for (const s of settings) { map[s.key] = s.value }
+  try {
+    const settings = await prisma.setting.findMany({ where: { group: 'admission' } })
+    for (const s of settings) { map[s.key] = s.value }
+  } catch (error) {
+    console.warn('DB not available for AdmissionSettings, using defaults:', error)
+  }
   const defaults: Record<string, string> = {
     admission_enabled: 'true',
     admission_session: '2025-26',

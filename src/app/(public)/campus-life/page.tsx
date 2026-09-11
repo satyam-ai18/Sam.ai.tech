@@ -14,7 +14,12 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function CampusLifePage() {
-  const page = await prisma.page.findUnique({ where: { slug: 'campus-life' } })
+  let page = null
+  try {
+    page = await prisma.page.findUnique({ where: { slug: 'campus-life' } })
+  } catch (error) {
+    console.warn('DB not available for CampusLifePage, using defaults:', error)
+  }
 
   const activities = [
     { title: 'Sports & Athletics', desc: 'Cricket, football, track events, and regular physical conditioning encouraging teamwork and resilience.', icon: <Trophy size={20} /> },

@@ -15,17 +15,22 @@ export const dynamic = 'force-dynamic'
 
 export default async function NoticesPage() {
   const now = new Date()
+  let notices: any[] = []
 
-  const notices = await prisma.notice.findMany({
-    where: {
-      isPublished: true,
-      OR: [
-        { expiryDate: null },
-        { expiryDate: { gte: now } },
-      ],
-    },
-    orderBy: [{ isImportant: 'desc' }, { date: 'desc' }],
-  })
+  try {
+    notices = await prisma.notice.findMany({
+      where: {
+        isPublished: true,
+        OR: [
+          { expiryDate: null },
+          { expiryDate: { gte: now } },
+        ],
+      },
+      orderBy: [{ isImportant: 'desc' }, { date: 'desc' }],
+    })
+  } catch (error) {
+    console.warn('DB not available for NoticesPage, using defaults:', error)
+  }
 
   // Separate pinned and regular
   const pinned = notices.filter(n => n.isImportant)

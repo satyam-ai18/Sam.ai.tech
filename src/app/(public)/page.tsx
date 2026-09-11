@@ -19,6 +19,7 @@ import { TestimonialsSection } from '@/components/public/home/TestimonialsSectio
 import { AdmissionProcess } from '@/components/public/home/AdmissionProcess'
 import { StatsSection } from '@/components/public/home/StatsSection'
 import { ContactCTA } from '@/components/public/home/ContactCTA'
+import { HOMEPAGE_SECTIONS, SCHOOL_INFO } from '@/lib/constants'
 import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
@@ -31,64 +32,156 @@ export const metadata: Metadata = {
   keywords: 'Primary School, Convent School, Best School in Jaunpur, Jaunpur, schools in Jaunpur, kids school in jaunpur, admission in school, MK Convent',
 }
 
+const DEFAULT_SECTIONS = HOMEPAGE_SECTIONS.map((sec) => ({
+  id: `sec-${sec.id}`,
+  sectionId: sec.id,
+  label: sec.label,
+  isVisible: true,
+  order: sec.order,
+}))
+
+const DEFAULT_HERO_SLIDES = [
+  {
+    id: 'slide-1',
+    heading: 'Where Learning Builds Character & Future',
+    subheading: 'A premier Co-Ed English Medium school in Jaunpur committed to holistic education and excellence',
+    badge: 'Admissions Open 2026-2027',
+    primaryBtnText: 'Apply for Admission',
+    primaryBtnUrl: '/admissions',
+    secondaryBtnText: 'Explore School',
+    secondaryBtnUrl: '/about',
+    overlayIntensity: 55,
+  },
+  {
+    id: 'slide-2',
+    heading: "Nurturing Minds, Building Tomorrow's Leaders",
+    subheading: 'Modern infrastructure, experienced faculty, and a curriculum designed for the 21st century',
+    badge: 'CBSE Pattern School',
+    primaryBtnText: 'Our Academics',
+    primaryBtnUrl: '/academics',
+    secondaryBtnText: 'View Facilities',
+    secondaryBtnUrl: '/facilities',
+    overlayIntensity: 55,
+  },
+]
+
+const DEFAULT_ABOUT_DATA = {
+  id: 'about-default',
+  key: 'about',
+  heading: 'Welcome to Maa Kaushilya Convent School',
+  subheading: 'Empowering young minds with quality education, moral values, and modern skills.',
+  content: '<p>Maa Kaushilya Convent School, founded in 2010 by Late Kamla Devi, is dedicated to providing holistic CBSE pattern education in Jaunpur, Uttar Pradesh.</p>',
+  quoteText: 'Education is the most powerful weapon which you can use to change the world.',
+  quoteAuthor: 'Late Kamla Devi, Founder',
+  primaryBtnText: 'Discover More',
+  primaryBtnUrl: '/about',
+  secondaryBtnText: 'Contact Us',
+  secondaryBtnUrl: '/contact',
+  image: null,
+  badge: 'About MK Convent',
+  stat1Value: '1000+',
+  stat1Label: 'Happy Students',
+  stat2Value: '100%',
+  stat2Label: 'Board Pass Rate',
+  stat3Value: '15+',
+  stat3Label: 'Years of Excellence',
+  stat4Value: '40+',
+  stat4Label: 'Expert Educators',
+  features: JSON.stringify(['CBSE Pattern Curriculum', 'Smart Classrooms', 'Science & Computer Labs', 'Sports & Cultural Activities']),
+  isVisible: true,
+}
+
+const DEFAULT_SETTINGS_MAP: Record<string, string> = {
+  site_name: SCHOOL_INFO.name,
+  site_short_name: SCHOOL_INFO.shortName,
+  site_tagline: SCHOOL_INFO.tagline,
+  contact_phone: SCHOOL_INFO.phone,
+  contact_email: SCHOOL_INFO.email,
+  contact_address: `${SCHOOL_INFO.address}, ${SCHOOL_INFO.city}, ${SCHOOL_INFO.state} - ${SCHOOL_INFO.pincode}`,
+  admission_open: 'true',
+  admission_year: '2026-2027',
+  admission_banner_text: 'Admissions Now Open for Academic Year 2026-2027!',
+}
+
 async function getHomeData() {
-  const [
-    sections,
-    heroSlides,
-    aboutData,
-    principalData,
-    coreValues,
-    academics,
-    facilities,
-    teachers,
-    galleryAlbums,
-    achievements,
-    news,
-    events,
-    testimonials,
-    notices,
-    settings,
-  ] = await Promise.all([
-    prisma.homepageSection.findMany({ orderBy: { order: 'asc' } }),
-    prisma.heroSlide.findMany({ where: { isActive: true }, orderBy: { order: 'asc' } }),
-    prisma.aboutSection.findFirst({ where: { key: 'about', isVisible: true } }),
-    prisma.aboutSection.findFirst({ where: { key: 'principal', isVisible: true } }),
-    prisma.coreValue.findMany({ where: { isActive: true }, orderBy: { order: 'asc' }, take: 6 }),
-    prisma.academic.findMany({ where: { isActive: true }, orderBy: { order: 'asc' }, take: 4 }),
-    prisma.facility.findMany({ where: { isActive: true }, orderBy: { order: 'asc' }, take: 8 }),
-    prisma.teacher.findMany({ where: { isActive: true }, orderBy: { order: 'asc' }, take: 4 }),
-    prisma.galleryAlbum.findMany({
-      where: { isActive: true, status: 'PUBLISHED' },
-      orderBy: { order: 'asc' },
-      take: 6,
-      include: { media: { take: 4, orderBy: { order: 'asc' } } },
-    }),
-    prisma.achievement.findMany({ where: { isVisible: true }, orderBy: { order: 'asc' }, take: 6 }),
-    prisma.news.findMany({ where: { status: 'PUBLISHED' }, orderBy: { publishedAt: 'desc' }, take: 3 }),
-    prisma.event.findMany({ where: { status: 'PUBLISHED', startDate: { gte: new Date() } }, orderBy: { startDate: 'asc' }, take: 3 }),
-    prisma.testimonial.findMany({ where: { isVisible: true }, orderBy: { order: 'asc' }, take: 6 }),
-    prisma.notice.findMany({ where: { isPublished: true }, orderBy: { date: 'desc' }, take: 5 }),
-    prisma.setting.findMany(),
-  ])
+  try {
+    const [
+      sections,
+      heroSlides,
+      aboutData,
+      principalData,
+      coreValues,
+      academics,
+      facilities,
+      teachers,
+      galleryAlbums,
+      achievements,
+      news,
+      events,
+      testimonials,
+      notices,
+      settings,
+    ] = await Promise.all([
+      prisma.homepageSection.findMany({ orderBy: { order: 'asc' } }),
+      prisma.heroSlide.findMany({ where: { isActive: true }, orderBy: { order: 'asc' } }),
+      prisma.aboutSection.findFirst({ where: { key: 'about', isVisible: true } }),
+      prisma.aboutSection.findFirst({ where: { key: 'principal', isVisible: true } }),
+      prisma.coreValue.findMany({ where: { isActive: true }, orderBy: { order: 'asc' }, take: 6 }),
+      prisma.academic.findMany({ where: { isActive: true }, orderBy: { order: 'asc' }, take: 4 }),
+      prisma.facility.findMany({ where: { isActive: true }, orderBy: { order: 'asc' }, take: 8 }),
+      prisma.teacher.findMany({ where: { isActive: true }, orderBy: { order: 'asc' }, take: 4 }),
+      prisma.galleryAlbum.findMany({
+        where: { isActive: true, status: 'PUBLISHED' },
+        orderBy: { order: 'asc' },
+        take: 6,
+        include: { media: { take: 4, orderBy: { order: 'asc' } } },
+      }),
+      prisma.achievement.findMany({ where: { isVisible: true }, orderBy: { order: 'asc' }, take: 6 }),
+      prisma.news.findMany({ where: { status: 'PUBLISHED' }, orderBy: { publishedAt: 'desc' }, take: 3 }),
+      prisma.event.findMany({ where: { status: 'PUBLISHED', startDate: { gte: new Date() } }, orderBy: { startDate: 'asc' }, take: 3 }),
+      prisma.testimonial.findMany({ where: { isVisible: true }, orderBy: { order: 'asc' }, take: 6 }),
+      prisma.notice.findMany({ where: { isPublished: true }, orderBy: { date: 'desc' }, take: 5 }),
+      prisma.setting.findMany(),
+    ])
 
-  const settingsMap = Object.fromEntries(settings.map((s) => [s.key, s.value]))
+    const settingsMap = { ...DEFAULT_SETTINGS_MAP, ...Object.fromEntries(settings.map((s) => [s.key, s.value])) }
 
-  return {
-    sections,
-    heroSlides,
-    aboutData,
-    principalData,
-    coreValues,
-    academics,
-    facilities,
-    teachers,
-    galleryAlbums,
-    achievements,
-    news,
-    events,
-    testimonials,
-    notices,
-    settingsMap,
+    return {
+      sections: sections.length > 0 ? sections : (DEFAULT_SECTIONS as any),
+      heroSlides: heroSlides.length > 0 ? heroSlides : (DEFAULT_HERO_SLIDES as any),
+      aboutData: aboutData || (DEFAULT_ABOUT_DATA as any),
+      principalData,
+      coreValues,
+      academics,
+      facilities,
+      teachers,
+      galleryAlbums,
+      achievements,
+      news,
+      events,
+      testimonials,
+      notices,
+      settingsMap,
+    }
+  } catch (error) {
+    console.warn('Database connection unavailable for HomePage, using fallback data:', error)
+    return {
+      sections: DEFAULT_SECTIONS as any,
+      heroSlides: DEFAULT_HERO_SLIDES as any,
+      aboutData: DEFAULT_ABOUT_DATA as any,
+      principalData: null,
+      coreValues: [],
+      academics: [],
+      facilities: [],
+      teachers: [],
+      galleryAlbums: [],
+      achievements: [],
+      news: [],
+      events: [],
+      testimonials: [],
+      notices: [],
+      settingsMap: DEFAULT_SETTINGS_MAP,
+    }
   }
 }
 
@@ -98,7 +191,7 @@ export default async function HomePage() {
   return (
     <main id="main-content">
       {/* Dynamic Homepage Sections */}
-      {data.sections.map((sec) => {
+      {data.sections.map((sec: any) => {
         if (!sec.isVisible) return null
 
         switch (sec.sectionId) {

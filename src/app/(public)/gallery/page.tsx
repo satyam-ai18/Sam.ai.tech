@@ -13,15 +13,20 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function GalleryPage() {
-  const albums = await prisma.galleryAlbum.findMany({
-    where: { isActive: true, status: 'PUBLISHED' },
-    include: {
-      media: {
-        orderBy: { order: 'asc' },
+  let albums: any[] = []
+  try {
+    albums = await prisma.galleryAlbum.findMany({
+      where: { isActive: true, status: 'PUBLISHED' },
+      include: {
+        media: {
+          orderBy: { order: 'asc' },
+        },
       },
-    },
-    orderBy: { order: 'asc' },
-  })
+      orderBy: { order: 'asc' },
+    })
+  } catch (error) {
+    console.warn('DB not available for GalleryPage, using defaults:', error)
+  }
 
   return (
     <main>

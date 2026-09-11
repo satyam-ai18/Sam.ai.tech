@@ -13,10 +13,15 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function AchievementsPage() {
-  const achievements = await prisma.achievement.findMany({
-    where: { isVisible: true },
-    orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
-  })
+  let achievements: any[] = []
+  try {
+    achievements = await prisma.achievement.findMany({
+      where: { isVisible: true },
+      orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
+    })
+  } catch (error) {
+    console.warn('DB not available for AchievementsPage, using defaults:', error)
+  }
 
   return (
     <main>

@@ -14,10 +14,15 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function EventsPage() {
-  const events = await prisma.event.findMany({
-    where: { status: 'PUBLISHED' },
-    orderBy: { startDate: 'asc' },
-  })
+  let events: any[] = []
+  try {
+    events = await prisma.event.findMany({
+      where: { status: 'PUBLISHED' },
+      orderBy: { startDate: 'asc' },
+    })
+  } catch (error) {
+    console.warn('DB not available for EventsPage, using defaults:', error)
+  }
 
   return (
     <main>

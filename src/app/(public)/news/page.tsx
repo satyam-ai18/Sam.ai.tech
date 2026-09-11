@@ -15,10 +15,15 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function NewsPage() {
-  const newsList = await prisma.news.findMany({
-    where: { status: 'PUBLISHED' },
-    orderBy: { publishedAt: 'desc' },
-  })
+  let newsList: any[] = []
+  try {
+    newsList = await prisma.news.findMany({
+      where: { status: 'PUBLISHED' },
+      orderBy: { publishedAt: 'desc' },
+    })
+  } catch (error) {
+    console.warn('DB not available for NewsPage, using defaults:', error)
+  }
 
   return (
     <main>

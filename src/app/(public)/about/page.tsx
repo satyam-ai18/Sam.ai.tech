@@ -13,10 +13,18 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function AboutPage() {
-  const [aboutData, coreValues] = await Promise.all([
-    prisma.aboutSection.findUnique({ where: { key: 'about' } }),
-    prisma.coreValue.findMany({ where: { isActive: true }, orderBy: { order: 'asc' } }),
-  ])
+  let aboutData = null
+  let coreValues: any[] = []
+  try {
+    const res = await Promise.all([
+      prisma.aboutSection.findUnique({ where: { key: 'about' } }),
+      prisma.coreValue.findMany({ where: { isActive: true }, orderBy: { order: 'asc' } }),
+    ])
+    aboutData = res[0]
+    coreValues = res[1]
+  } catch (error) {
+    console.warn('DB not available for AboutPage, using defaults:', error)
+  }
 
   return (
     <main>

@@ -15,11 +15,48 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic'
 
+const DEFAULT_FACILITIES = [
+  {
+    id: 'fac-1',
+    title: 'Smart Classrooms',
+    description: 'Digitally-equipped classrooms featuring interactive displays, audiovisual aids, and ergonomic seating.',
+    features: JSON.stringify(['Interactive Flat Panels', 'High-Speed Wi-Fi', 'Ergonomic Furniture', 'Climate Control']),
+    image: null,
+  },
+  {
+    id: 'fac-2',
+    title: 'Composite Science Laboratory',
+    description: 'Fully equipped physics, chemistry, and biology stations designed for safe hands-on experimentation.',
+    features: JSON.stringify(['Precision Equipment', 'Safety Gear & Showers', 'Demonstration Station', 'Specimen Collection']),
+    image: null,
+  },
+  {
+    id: 'fac-3',
+    title: 'Modern Computer Center',
+    description: 'High-speed networked systems providing students foundational coding, digital literacy, and AI fundamentals.',
+    features: JSON.stringify(['Dedicated Workstations', 'Coding & Robotics Tools', 'Safe Internet Access', 'UPS Backup']),
+    image: null,
+  },
+  {
+    id: 'fac-4',
+    title: 'Sports Grounds & Athletic Track',
+    description: 'Expansive outdoor grounds for cricket, football, volleyball, athletics, and physical training under expert coaches.',
+    features: JSON.stringify(['Cricket Pitch', 'Volleyball Court', 'Athletic Running Track', 'Indoor Games Arena']),
+    image: null,
+  },
+]
+
 export default async function FacilitiesPage() {
-  const facilities = await prisma.facility.findMany({
-    where: { isActive: true, status: 'PUBLISHED' },
-    orderBy: { order: 'asc' },
-  })
+  let facilities = DEFAULT_FACILITIES
+  try {
+    const res = await prisma.facility.findMany({
+      where: { isActive: true, status: 'PUBLISHED' },
+      orderBy: { order: 'asc' },
+    })
+    if (res.length > 0) facilities = res as any
+  } catch (error) {
+    console.warn('DB not available for FacilitiesPage, using defaults:', error)
+  }
 
   return (
     <main>

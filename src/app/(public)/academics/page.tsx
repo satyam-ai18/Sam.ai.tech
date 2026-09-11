@@ -15,17 +15,64 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic'
 
+const DEFAULT_PROGRAMS = [
+  {
+    id: 'prog-1',
+    title: 'Pre-Primary Wing (Nursery, LKG, UKG)',
+    ageGroup: '3 – 5 Years',
+    description: 'Play-based early childhood education fostering motor skills, phonics, number sense, and social interaction.',
+    subjects: JSON.stringify(['Early Literacy & Phonics', 'Numeracy', 'Environmental Awareness', 'Art & Craft', 'Music & Rhymes']),
+    highlights: JSON.stringify(['Activity-based pedagogy', 'Safe thematic play area', 'Personalized child care', 'Regular parent updates']),
+    image: null,
+  },
+  {
+    id: 'prog-2',
+    title: 'Primary Wing (Classes 1 – 5)',
+    ageGroup: '6 – 10 Years',
+    description: 'Building strong conceptual foundations in languages, mathematics, environmental studies, and computer basics.',
+    subjects: JSON.stringify(['English', 'Hindi', 'Mathematics', 'Environmental Studies', 'Computer Science', 'General Knowledge']),
+    highlights: JSON.stringify(['Smart classroom integration', 'Hands-on experiential learning', 'Sports & physical training', 'Creative expression']),
+    image: null,
+  },
+  {
+    id: 'prog-3',
+    title: 'Middle Wing (Classes 6 – 8)',
+    ageGroup: '11 – 13 Years',
+    description: 'Transitioning from concrete to abstract reasoning with formal science, social sciences, and advanced computational skills.',
+    subjects: JSON.stringify(['English', 'Hindi', 'Sanskrit', 'Mathematics', 'Science (Phy/Chem/Bio)', 'Social Science', 'Computer Applications']),
+    highlights: JSON.stringify(['Science lab experiments', 'Olympiad & competitive exam foundation', 'Inter-house competitions', 'Leadership clubs']),
+    image: null,
+  },
+  {
+    id: 'prog-4',
+    title: 'Secondary Wing (Classes 9 – 10)',
+    ageGroup: '14 – 15 Years',
+    description: 'Rigorous CBSE curriculum preparation focusing on analytical depth, board examination mastery, and career orientation.',
+    subjects: JSON.stringify(['English Communicative/Language', 'Hindi Course A/B', 'Mathematics Standard/Basic', 'Science', 'Social Science', 'Information Technology']),
+    highlights: JSON.stringify(['Comprehensive board prep', 'Pre-board simulation exams', 'Career counseling seminars', 'Remedial coaching sessions']),
+    image: null,
+  },
+]
+
 export default async function AcademicsPage() {
-  const [academics, subjects] = await Promise.all([
-    prisma.academic.findMany({
-      where: { isActive: true, status: 'PUBLISHED' },
-      orderBy: { order: 'asc' },
-    }),
-    prisma.subject.findMany({
-      where: { isActive: true },
-      orderBy: { order: 'asc' },
-    }),
-  ])
+  let academics = DEFAULT_PROGRAMS
+  let subjects: any[] = []
+  try {
+    const res = await Promise.all([
+      prisma.academic.findMany({
+        where: { isActive: true, status: 'PUBLISHED' },
+        orderBy: { order: 'asc' },
+      }),
+      prisma.subject.findMany({
+        where: { isActive: true },
+        orderBy: { order: 'asc' },
+      }),
+    ])
+    if (res[0].length > 0) academics = res[0] as any
+    subjects = res[1]
+  } catch (error) {
+    console.warn('DB not available for AcademicsPage, using defaults:', error)
+  }
 
   return (
     <main>
