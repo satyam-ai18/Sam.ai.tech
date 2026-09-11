@@ -1,0 +1,50 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0.25rem 0.25rem 0.25rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.info {
+  font-size: 0.8125rem;
+  color: hsl(220, 15%, 50%);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--admin-border, #e2e8f0);
+  background: var(--admin-surface, #ffffff);
+  color: hsl(220, 25%, 30%);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn:hover:not(:disabled) {
+  background: hsl(220, 25%, 96%);
+  border-color: hsl(220, 25%, 80%);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pageText {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: hsl(220, 25%, 30%);
+  padding: 0 0.5rem;
+}

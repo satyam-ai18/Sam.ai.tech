@@ -1,0 +1,122 @@
+.section {
+  padding: 5rem 0;
+  background: hsl(220, 20%, 98%);
+  border-top: 1px solid hsl(220, 20%, 92%);
+}
+
+.header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 3.5rem auto;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: hsl(220, 65%, 28%);
+  margin-bottom: 0.5rem;
+}
+
+.heading {
+  font-size: 2.25rem;
+  font-weight: 800;
+  font-family: var(--font-heading, Playfair Display, serif);
+  color: hsl(220, 35%, 15%);
+  margin: 0 0 0.75rem 0;
+}
+
+.subheading {
+  font-size: 1rem;
+  color: hsl(220, 15%, 50%);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  position: relative;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid hsl(220, 20%, 90%);
+  padding: 2rem 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.num {
+  font-size: 2rem;
+  font-weight: 900;
+  color: hsl(220, 30%, 88%);
+  font-family: monospace;
+}
+
+.iconWrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: hsl(220, 65%, 95%);
+  color: hsl(220, 65%, 30%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: hsl(220, 35%, 15%);
+  margin: 0 0 0.5rem 0;
+}
+
+.cardDesc {
+  font-size: 0.875rem;
+  color: hsl(220, 15%, 50%);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.ctaBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: hsl(220, 65%, 28%);
+  color: #ffffff;
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(30, 58, 138, 0.25);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.ctaBtn:hover {
+  background: hsl(220, 65%, 22%);
+  transform: translateY(-2px);
+}

@@ -1,0 +1,58 @@
+.bar {
+  background: var(--color-accent);
+  color: hsl(220, 35%, 12%);
+  padding: 0.625rem 0;
+  font-size: 0.85rem;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  overflow: hidden;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+  background: rgba(0,0,0,0.12);
+  padding: 0.2rem 0.75rem;
+  border-radius: var(--radius-full);
+}
+
+.ticker {
+  flex: 1;
+  overflow: hidden;
+  height: 1.4em;
+  position: relative;
+}
+
+.text {
+  display: block;
+  font-weight: 500;
+  animation: tickerIn 0.5s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@keyframes tickerIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.viewAll {
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  opacity: 0.75;
+  transition: opacity var(--transition-fast);
+}
+
+.viewAll:hover { opacity: 1; }

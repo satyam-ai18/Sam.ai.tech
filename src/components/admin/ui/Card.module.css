@@ -1,0 +1,115 @@
+.card {
+  background: var(--admin-surface, #ffffff);
+  border: 1px solid var(--admin-border, #e2e8f0);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  border-color: hsl(220, 25%, 82%);
+}
+
+.cardHeader {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--admin-border, #e2e8f0);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: hsl(220, 35%, 15%);
+  margin: 0;
+}
+
+.cardDescription {
+  font-size: 0.875rem;
+  color: hsl(220, 15%, 50%);
+  margin: 0.25rem 0 0 0;
+}
+
+.cardContent {
+  padding: 1.5rem;
+}
+
+.cardFooter {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--admin-border, #e2e8f0);
+  background: hsl(220, 25%, 98%);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* Stat card variant */
+.statCard {
+  padding: 1.5rem;
+}
+
+.statCardInner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.statTitle {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: hsl(220, 15%, 50%);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.statValue {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: hsl(220, 35%, 15%);
+  margin-top: 0.35rem;
+  line-height: 1.2;
+}
+
+.statDescription {
+  font-size: 0.8125rem;
+  color: hsl(220, 15%, 55%);
+  margin-top: 0.35rem;
+}
+
+.statIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md, 8px);
+  background: hsl(220, 70%, 95%);
+  color: hsl(220, 70%, 35%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.statTrend {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+}
+
+.trendUp {
+  background: hsl(140, 60%, 93%);
+  color: hsl(140, 70%, 25%);
+}
+
+.trendDown {
+  background: hsl(0, 70%, 95%);
+  color: hsl(0, 70%, 40%);
+}

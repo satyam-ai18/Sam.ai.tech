@@ -1,0 +1,287 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: stretch;
+  position: relative;
+  overflow: hidden;
+  background: var(--color-primary);
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.bgPattern {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.04) 1px, transparent 1px),
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.bgGradient {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 60%, rgba(64, 160, 255, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 30%, rgba(245, 158, 11, 0.08) 0%, transparent 50%);
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ── Left Branding Panel ─────────────────── */
+.leftPanel {
+  flex: 1;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background: linear-gradient(135deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 100%);
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+@media (min-width: 1024px) {
+  .leftPanel {
+    display: flex;
+  }
+}
+
+.brandingWrap {
+  max-width: 420px;
+  color: white;
+}
+
+.logoBox {
+  width: 72px;
+  height: 72px;
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.schoolName {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.schoolLocation {
+  color: rgba(255,255,255,0.65);
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+.divider {
+  width: 3rem;
+  height: 2px;
+  background: var(--color-accent);
+  border-radius: var(--radius-full);
+  margin: 2rem 0;
+}
+
+.panelTitle {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.75rem;
+}
+
+.panelDesc {
+  color: rgba(255,255,255,0.7);
+  line-height: 1.6;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(255,255,255,0.85);
+  font-size: 0.875rem;
+}
+
+.featureItem svg {
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+/* ── Right Form Panel ─────────────────────── */
+.rightPanel {
+  flex: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  background: var(--color-bg);
+}
+
+@media (min-width: 640px) {
+  .rightPanel {
+    padding: 3rem 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .rightPanel {
+    width: 460px;
+    flex: none;
+  }
+}
+
+.formCard {
+  width: 100%;
+  max-width: 420px;
+  background: var(--color-surface);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-2xl);
+  padding: 2.5rem 2rem;
+  border: 1px solid var(--color-border-light);
+}
+
+@media (min-width: 640px) {
+  .formCard {
+    padding: 3rem 2.5rem;
+  }
+}
+
+.formHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.formIcon {
+  width: 54px;
+  height: 54px;
+  background: var(--color-primary-muted);
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  margin: 0 auto 1.25rem;
+}
+
+.formTitle {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+}
+
+.formSubtitle {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  margin-bottom: 0;
+}
+
+.errorAlert {
+  background: var(--color-error-muted);
+  border: 1.5px solid var(--color-error);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  color: var(--color-error);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.inputWrap {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.inputWithIcon {
+  padding-left: 2.75rem !important;
+}
+
+.inputWithAction {
+  padding-right: 3rem !important;
+}
+
+.showPasswordBtn {
+  position: absolute;
+  right: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  padding: 0.25rem;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast);
+}
+
+.showPasswordBtn:hover {
+  color: var(--color-primary);
+}
+
+.submitBtn {
+  width: 100%;
+  margin-top: 0.5rem;
+  gap: 0.5rem;
+}
+
+.formFooter {
+  margin-top: 1.5rem;
+  text-align: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border-light);
+}
+
+.backLink {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  transition: color var(--transition-fast);
+}
+
+.backLink:hover {
+  color: var(--color-primary);
+}
+
+.copyright {
+  margin-top: 2rem;
+  color: var(--color-text-disabled);
+  font-size: var(--text-xs);
+  text-align: center;
+}

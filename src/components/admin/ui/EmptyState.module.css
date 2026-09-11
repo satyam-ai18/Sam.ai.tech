@@ -1,0 +1,44 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3.5rem 1.5rem;
+  background: var(--admin-surface, #ffffff);
+  border: 1px dashed var(--admin-border, #cbd5e1);
+  border-radius: var(--radius-xl, 16px);
+}
+
+.iconWrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: hsl(220, 25%, 95%);
+  color: hsl(220, 20%, 55%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: hsl(220, 35%, 15%);
+  margin: 0 0 0.5rem 0;
+}
+
+.description {
+  font-size: 0.875rem;
+  color: hsl(220, 15%, 50%);
+  max-width: 420px;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}

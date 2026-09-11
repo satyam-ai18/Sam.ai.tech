@@ -1,0 +1,606 @@
+// Prisma schema file for MK Convent School
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// AUTH & ROLES & PERMISSIONS
+// SQLite does not support Prisma enums.
+// Core Roles: SUPER_ADMIN | CONTENT_ADMIN | ADMISSION_ADMIN | EDITOR
+// ─────────────────────────────────────────────
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("EDITOR")
+  roleId    String?
+  roleRel   Role?    @relation(fields: [roleId], references: [id])
+  status         String    @default("ACTIVE")
+  isActive       Boolean   @default(true)
+  lastLogin      DateTime?
+  failedAttempts Int       @default(0)
+  lockoutUntil   DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@map("users")
+}
+
+model Role {
+  id              String           @id @default(cuid())
+  name            String           @unique
+  description     String?
+  rolePermissions RolePermission[]
+  users           User[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@map("roles")
+}
+
+model Permission {
+  id              String           @id @default(cuid())
+  name            String           @unique
+  description     String?
+  rolePermissions RolePermission[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  id           String     @id @default(cuid())
+  roleId       String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permissionId String
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+
+  @@unique([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+// ─────────────────────────────────────────────
+// SITE SETTINGS (key-value store)
+// ─────────────────────────────────────────────
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  type      String   @default("text") // text | textarea | boolean | image | json
+  group     String   @default("general") // general | contact | social | website | admission | theme | seo
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("settings")
+}
+
+// ─────────────────────────────────────────────
+// AUDIT LOGS
+// ─────────────────────────────────────────────
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  userName  String?
+  action    String
+  module    String
+  recordId  String?
+  details   String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@map("audit_logs")
+}
+
+// ─────────────────────────────────────────────
+// PAGES (CMS Static & Custom Pages)
+// ─────────────────────────────────────────────
+
+model Page {
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  content        String
+  featuredImage  String?
+  heroHeading    String?
+  heroSubtitle   String?
+  blocks         String?
+  status         String    @default("PUBLISHED") // DRAFT | PUBLISHED
+  publishedAt    DateTime?
+  seoTitle       String?
+  seoDescription String?
+  ogImage        String?
+  createdBy      String?
+  updatedBy      String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@map("pages")
+}
+
+// ─────────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────────
+
+model NavigationItem {
+  id        String          @id @default(cuid())
+  label     String
+  url       String
+  target    String          @default("_self")
+  order     Int             @default(0)
+  status    String          @default("ACTIVE")
+  isActive  Boolean         @default(true)
+  parentId  String?
+  parent    NavigationItem? @relation("NavChildren", fields: [parentId], references: [id])
+  children  NavigationItem[] @relation("NavChildren")
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@map("navigation_items")
+}
+
+// ─────────────────────────────────────────────
+// HOMEPAGE SECTIONS (ordering + visibility + custom settings)
+// ─────────────────────────────────────────────
+
+model HomepageSection {
+  id          String   @id @default(cuid())
+  sectionId   String   @unique
+  sectionKey  String?
+  label       String
+  title       String?
+  subtitle    String?
+  content     String?
+  image       String?
+  buttonText  String?
+  buttonUrl   String?
+  settings    String?  // JSON string
+  order       Int      @default(0)
+  status      String   @default("PUBLISHED")
+  isVisible   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("homepage_sections")
+}
+
+// ─────────────────────────────────────────────
+// HERO SLIDES
+// ─────────────────────────────────────────────
+
+model HeroSlide {
+  id               String   @id @default(cuid())
+  heading          String
+  subheading       String?
+  badge            String?
+  primaryBtnText   String?
+  primaryBtnUrl    String?
+  secondaryBtnText String?
+  secondaryBtnUrl  String?
+  backgroundImage  String?
+  overlayIntensity Int      @default(50)
+  order            Int      @default(0)
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("hero_slides")
+}
+
+// ─────────────────────────────────────────────
+// ABOUT SECTION
+// ─────────────────────────────────────────────
+
+model AboutSection {
+  id            String   @id @default(cuid())
+  key           String   @unique
+  heading       String
+  subheading    String?
+  content       String
+  image         String?
+  imageAlt      String?
+  designation   String?
+  qualification String?
+  isVisible     Boolean  @default(true)
+  order         Int      @default(0)
+  updatedAt     DateTime @updatedAt
+
+  @@map("about_sections")
+}
+
+model CoreValue {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  icon        String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("core_values")
+}
+
+// ─────────────────────────────────────────────
+// ACADEMICS
+// ─────────────────────────────────────────────
+
+model Academic {
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  description     String
+  fullDescription String?
+  image           String?
+  subjects        String   @default("[]")
+  highlights      String   @default("[]")
+  features        String   @default("[]")
+  ageGroup        String?
+  eligibility     String?
+  order           Int      @default(0)
+  status          String   @default("PUBLISHED")
+  isActive        Boolean  @default(true)
+  seoTitle        String?
+  seoDescription  String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("academics")
+}
+
+model Subject {
+  id          String   @id @default(cuid())
+  name        String
+  code        String?
+  description String?
+  classes     String   @default("[]")
+  icon        String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("subjects")
+}
+
+// ─────────────────────────────────────────────
+// FACILITIES
+// ─────────────────────────────────────────────
+
+model Facility {
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  description    String
+  content        String?
+  image          String?
+  images         String   @default("[]")
+  icon           String?
+  features       String   @default("[]")
+  order          Int      @default(0)
+  status         String   @default("PUBLISHED")
+  isActive       Boolean  @default(true)
+  seoTitle       String?
+  seoDescription String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("facilities")
+}
+
+// ─────────────────────────────────────────────
+// TEACHERS / STAFF
+// ─────────────────────────────────────────────
+
+model Teacher {
+  id             String   @id @default(cuid())
+  name           String
+  slug           String?  @unique
+  designation    String
+  qualification  String
+  department     String
+  bio            String?
+  photo          String?
+  experience     String?
+  specialization String?
+  email          String?
+  phone          String?
+  facebookUrl    String?
+  linkedinUrl    String?
+  order          Int      @default(0)
+  status         String   @default("ACTIVE")
+  isActive       Boolean  @default(true)
+  isFeatured     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("teachers")
+}
+
+// ─────────────────────────────────────────────
+// ACHIEVEMENTS
+// ─────────────────────────────────────────────
+
+model Achievement {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  studentName String?
+  category    String    @default("general")
+  award       String?
+  position    String?
+  date        DateTime?
+  year        String?
+  image       String?
+  status      String    @default("PUBLISHED")
+  isVisible   Boolean   @default(true)
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("achievements")
+}
+
+// ─────────────────────────────────────────────
+// TESTIMONIALS
+// ─────────────────────────────────────────────
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String   @default("Parent")
+  content   String
+  rating    Int      @default(5)
+  photo     String?
+  isVisible Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("testimonials")
+}
+
+// ─────────────────────────────────────────────
+// GALLERY
+// ─────────────────────────────────────────────
+
+model GalleryAlbum {
+  id             String         @id @default(cuid())
+  title          String
+  slug           String         @unique
+  description    String?
+  coverImage     String?
+  category       String         @default("general")
+  eventDate      DateTime?
+  order          Int            @default(0)
+  status         String         @default("PUBLISHED")
+  isActive       Boolean        @default(true)
+  seoTitle       String?
+  seoDescription String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  media          GalleryMedia[]
+
+  @@map("gallery_albums")
+}
+
+model GalleryMedia {
+  id         String       @id @default(cuid())
+  albumId    String
+  album      GalleryAlbum @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  url        String
+  caption    String?
+  altText    String?
+  isFeatured Boolean      @default(false)
+  order      Int          @default(0)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  @@map("gallery_media")
+}
+
+// ─────────────────────────────────────────────
+// NEWS
+// status values: DRAFT | PUBLISHED
+// ─────────────────────────────────────────────
+
+model News {
+  id             String    @id @default(cuid())
+  title          String
+  slug           String    @unique
+  excerpt        String?
+  content        String
+  featuredImage  String?
+  category       String    @default("general")
+  author         String    @default("Admin")
+  status         String    @default("DRAFT")
+  publishedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  seoTitle       String?
+  seoDescription String?
+  seoKeywords    String?
+
+  @@map("news")
+}
+
+// ─────────────────────────────────────────────
+// EVENTS
+// status values: DRAFT | PUBLISHED
+// ─────────────────────────────────────────────
+
+model Event {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  description     String
+  image           String?
+  startDate       DateTime
+  endDate         DateTime?
+  startTime       String?
+  endTime         String?
+  location        String?
+  registrationUrl String?
+  status          String    @default("DRAFT")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  seoTitle        String?
+  seoDescription  String?
+
+  @@map("events")
+}
+
+// ─────────────────────────────────────────────
+// NOTICES
+// ─────────────────────────────────────────────
+
+model Notice {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  category    String    @default("general") // general | academic | sports | events | fee | exam
+  attachment  String?
+  date        DateTime  @default(now())
+  expiryDate  DateTime?
+  isImportant Boolean   @default(false)
+  isPublished Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([isPublished])
+  @@map("notices")
+}
+
+// ─────────────────────────────────────────────
+// ADMISSIONS
+// status values: SUBMITTED | UNDER_REVIEW | VERIFIED | APPROVED | REJECTED
+// ─────────────────────────────────────────────
+
+model Admission {
+  id                 String                   @id @default(cuid())
+  referenceNumber    String                   @unique
+  status             String                   @default("SUBMITTED")
+  adminMessage       String?                  // Public-safe message shown on status page
+  studentFirstName   String
+  studentLastName    String
+  studentGender      String
+  studentDob         DateTime
+  classApplied       String
+  session            String?                  // Admission session e.g. "2025-26"
+  studentPhoto       String?
+  phone              String
+  alternatePhone     String?
+  email              String?
+  address            String
+  city               String
+  state              String
+  pincode            String
+  fatherName         String
+  fatherOccupation   String?
+  fatherPhone        String?
+  fatherEmail        String?
+  motherName         String
+  motherOccupation   String?
+  motherPhone        String?
+  previousSchool     String?
+  previousClass      String?
+  previousBoard      String?
+  previousPercentage String?
+  internalNotes      String?
+  adminNotes         String?
+  reviewedBy         String?
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+  documents          AdmissionDocument[]
+  statusHistory      AdmissionStatusHistory[]
+
+  @@index([status])
+  @@index([classApplied])
+  @@index([session])
+  @@map("admissions")
+}
+
+model AdmissionDocument {
+  id          String    @id @default(cuid())
+  admissionId String
+  admission   Admission @relation(fields: [admissionId], references: [id], onDelete: Cascade)
+  name        String
+  url         String
+  type        String
+  size        Int       @default(0)
+  createdAt   DateTime  @default(now())
+
+  @@map("admission_documents")
+}
+
+model AdmissionStatusHistory {
+  id          String    @id @default(cuid())
+  admissionId String
+  admission   Admission @relation(fields: [admissionId], references: [id], onDelete: Cascade)
+  fromStatus  String?
+  toStatus    String
+  changedBy   String?
+  notes       String?
+  createdAt   DateTime  @default(now())
+
+  @@index([admissionId])
+  @@map("admission_status_history")
+}
+
+// ─────────────────────────────────────────────
+// COMPLAINTS
+// status values: PENDING | IN_PROGRESS | RESOLVED | CLOSED
+// ─────────────────────────────────────────────
+
+model Complaint {
+  id         String    @id @default(cuid())
+  name       String
+  email      String
+  phone      String?
+  category   String    @default("general")
+  subject    String
+  message    String
+  status     String    @default("PENDING")
+  adminNotes String?
+  resolvedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@map("complaints")
+}
+
+// ─────────────────────────────────────────────
+// MEDIA LIBRARY
+// ─────────────────────────────────────────────
+
+model Media {
+  id           String   @id @default(cuid())
+  filename     String
+  originalName String
+  title        String?
+  caption      String?
+  description  String?
+  url          String
+  type         String
+  mimeType     String?
+  size         Int
+  folder       String   @default("general")
+  altText      String?
+  uploadedBy   String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("media")
+}

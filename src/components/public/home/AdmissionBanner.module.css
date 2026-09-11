@@ -1,0 +1,133 @@
+.banner {
+  background: linear-gradient(135deg, hsl(220, 70%, 20%) 0%, hsl(220, 60%, 15%) 100%);
+  color: #ffffff;
+  padding: 2.25rem 0;
+  border-bottom: 3px solid hsl(40, 92%, 50%);
+  position: relative;
+  overflow: hidden;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.left {
+  flex: 1;
+  min-width: 300px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(251, 191, 36, 0.15);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  color: hsl(40, 95%, 60%);
+  padding: 0.3rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badgeIcon {
+  color: hsl(40, 92%, 50%);
+}
+
+.title {
+  font-size: 1.625rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem 0;
+  font-family: var(--font-heading, Playfair Display, serif);
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.desc {
+  font-size: 0.9375rem;
+  color: hsl(220, 20%, 82%);
+  margin: 0;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.deadline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: hsl(40, 95%, 70%);
+  font-weight: 600;
+  font-size: 0.8125rem;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.applyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: hsl(40, 92%, 50%);
+  color: hsl(220, 40%, 15%);
+  padding: 0.875rem 1.75rem;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.applyBtn:hover {
+  background: hsl(40, 95%, 55%);
+  transform: translateY(-2px);
+}
+
+.statusBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  backdrop-filter: blur(4px);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.statusBtn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 768px) {
+  .inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  .right {
+    width: 100%;
+  }
+  .applyBtn,
+  .statusBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}

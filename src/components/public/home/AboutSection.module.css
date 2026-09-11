@@ -1,0 +1,144 @@
+.section {
+  background: var(--color-surface);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 5fr 6fr;
+  }
+}
+
+/* ── Image ────────────────────────────────── */
+.imageCol {
+  position: relative;
+}
+
+.imageWrap {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: visible;
+}
+
+.image {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  display: block;
+}
+
+.imagePlaceholder {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.placeholderInner {
+  text-align: center;
+  color: white;
+  padding: 1.5rem;
+}
+
+.placeholderIcon {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+}
+
+.placeholderInner p {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.25rem;
+}
+
+.placeholderInner span {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.7);
+}
+
+.imageAccent {
+  position: absolute;
+  bottom: -0.75rem;
+  right: -0.75rem;
+  width: 60%;
+  height: 60%;
+  border: 3px solid var(--color-accent);
+  border-radius: var(--radius-xl);
+  z-index: -1;
+  opacity: 0.5;
+}
+
+.imageBadge {
+  position: absolute;
+  bottom: 1rem;
+  left: -1rem;
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  min-width: 90px;
+}
+
+@media (max-width: 640px) {
+  .imageBadge { display: none; }
+  .imageAccent { display: none; }
+}
+
+.badgeNumber {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.badgeText {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  margin-top: 0.25rem;
+  line-height: 1.3;
+}
+
+/* ── Content ──────────────────────────────── */
+.content {}
+
+.subheading {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.875rem;
+  line-height: 1.5;
+}
+
+.richText {
+  color: var(--color-text-secondary);
+  line-height: 1.65;
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+.richText p { margin-bottom: 0.75rem; }
+.richText strong { color: var(--color-text); font-weight: 600; }
+.richText ul { list-style: disc; padding-left: 1.25rem; margin-bottom: 0.75rem; }
+.richText li { margin-bottom: 0.35rem; }
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
