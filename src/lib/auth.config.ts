@@ -1,7 +1,13 @@
 import type { NextAuthConfig } from 'next-auth'
 
+export const AUTH_SECRET =
+  process.env.NEXTAUTH_SECRET ||
+  process.env.AUTH_SECRET ||
+  'mk-convent-school-secret-key-32chars-min-jwt'
+
 export const authConfig: NextAuthConfig = {
-  secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET || 'mk-convent-school-secret-key-32chars-min-jwt',
+  trustHost: true,
+  secret: AUTH_SECRET,
   pages: {
     signIn: '/auth/login',
     error: '/auth/login',

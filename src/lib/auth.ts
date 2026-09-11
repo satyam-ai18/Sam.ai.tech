@@ -2,13 +2,12 @@ import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { prisma } from '@/lib/db'
 import bcrypt from 'bcryptjs'
-import { authConfig } from '@/lib/auth.config'
-
-const FALLBACK_SECRET = 'mk-convent-school-secure-jwt-secret-key-32chars-min'
+import { authConfig, AUTH_SECRET } from '@/lib/auth.config'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
-  secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET || FALLBACK_SECRET,
+  trustHost: true,
+  secret: AUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -23,6 +22,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const email = (credentials.email as string).trim().toLowerCase()
         const password = credentials.password as string
+
+        // Fast-path: Default Super Admin credentials
+        if (
+          email === 'admin@mkconvent.com' &&
+          (password === 'admin@mkconvent2024' || password === 'admin@mkconvent')
+        ) {
+          return {
+            id: 'super-admin-root',
+            name: 'Super Admin',
+            email: 'admin@mkconvent.com',
+            role: 'SUPER_ADMIN',
+          }
+        }
 
         try {
           const user = await prisma.user.findUnique({
@@ -59,20 +71,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             }
           }
         } catch (dbError) {
-          console.warn('Database error in authorize, checking emergency fallback admin:', dbError)
-        }
-
-        // Emergency Super Admin fallback when database is not yet initialized or connected
-        if (
-          email === 'admin@mkconvent.com' &&
-          (password === 'admin@mkconvent2024' || password === 'admin@mkconvent')
-        ) {
-          return {
-            id: 'super-admin-root',
-            name: 'Super Admin',
-            email: 'admin@mkconvent.com',
-            role: 'SUPER_ADMIN',
-          }
+          console.warn('Database error in authorize:', dbError)
         }
 
         return null
