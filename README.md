@@ -1,6 +1,7 @@
-# 🏫 Maa Kaushilya Convent School — Website + CMS
+# Sam.ai.tech — 🏫 Maa Kaushilya Convent School (MK Convent)
 
-> Best CBSE School in Jaunpur | Full-Stack School Website with Admin CMS Panel
+> **Sam.ai.tech** | Professional web development, Next.js 14, UI/UX design, and AI-powered projects.  
+> **MK Convent School** | Best CBSE School in Jaunpur | Full-Stack School Website with Admin CMS Panel
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org/)
