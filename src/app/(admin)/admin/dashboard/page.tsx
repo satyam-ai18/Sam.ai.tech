@@ -24,77 +24,101 @@ export default async function AdminDashboardPage() {
   const userName = session?.user?.name || session?.user?.email || 'Administrator'
 
   // Comprehensive parallel queries across all school entities
-  const [
-    totalAdmissions,
-    newAdmissions,
-    underReviewAdmissions,
-    approvedAdmissions,
-    rejectedAdmissions,
-    publishedNews,
-    upcomingEvents,
-    activeNotices,
-    galleryAlbums,
-    totalTeachers,
-    totalFacilities,
-    totalAchievements,
-    totalMedia,
-    recentAdmissions,
-    admissionsList,
-    recentNews,
-    recentEvents,
-    recentPages,
-    recentLogs,
-  ] = await Promise.all([
-    prisma.admission.count(),
-    prisma.admission.count({ where: { status: 'SUBMITTED' } }),
-    prisma.admission.count({ where: { status: { in: ['UNDER_REVIEW', 'VERIFIED'] } } }),
-    prisma.admission.count({ where: { status: 'APPROVED' } }),
-    prisma.admission.count({ where: { status: 'REJECTED' } }),
-    prisma.news.count({ where: { status: 'PUBLISHED' } }),
-    prisma.event.count({ where: { startDate: { gte: new Date() }, status: 'PUBLISHED' } }),
-    prisma.notice.count({ where: { isPublished: true } }),
-    prisma.galleryAlbum.count({ where: { isActive: true } }),
-    prisma.teacher.count({ where: { isActive: true } }),
-    prisma.facility.count({ where: { isActive: true } }),
-    prisma.achievement.count({ where: { isVisible: true } }),
-    prisma.media.count(),
-    prisma.admission.findMany({
-      take: 6,
-      orderBy: { createdAt: 'desc' },
-      select: {
-        id: true,
-        referenceNumber: true,
-        studentFirstName: true,
-        studentLastName: true,
-        classApplied: true,
-        status: true,
-        createdAt: true,
-      },
-    }),
-    prisma.admission.findMany({
-      select: {
-        classApplied: true,
-        status: true,
-        createdAt: true,
-      },
-    }),
-    prisma.news.findMany({
-      take: 4,
-      orderBy: { createdAt: 'desc' },
-      select: { id: true, title: true, category: true, status: true, publishedAt: true },
-    }),
-    prisma.event.findMany({
-      take: 4,
-      orderBy: { startDate: 'asc' },
-      select: { id: true, title: true, startDate: true, location: true, status: true },
-    }),
-    prisma.page.findMany({
-      take: 4,
-      orderBy: { updatedAt: 'desc' },
-      select: { id: true, title: true, slug: true, status: true, updatedAt: true },
-    }),
-    getRecentAuditLogs(8),
-  ])
+  let totalAdmissions = 0
+  let newAdmissions = 0
+  let underReviewAdmissions = 0
+  let approvedAdmissions = 0
+  let rejectedAdmissions = 0
+  let publishedNews = 0
+  let upcomingEvents = 0
+  let activeNotices = 0
+  let galleryAlbums = 0
+  let totalTeachers = 0
+  let totalFacilities = 0
+  let totalAchievements = 0
+  let totalMedia = 0
+  let recentAdmissions: any[] = []
+  let admissionsList: any[] = []
+  let recentNews: any[] = []
+  let recentEvents: any[] = []
+  let recentPages: any[] = []
+  let recentLogs: any[] = []
+
+  try {
+    const res = await Promise.all([
+      prisma.admission.count(),
+      prisma.admission.count({ where: { status: 'SUBMITTED' } }),
+      prisma.admission.count({ where: { status: { in: ['UNDER_REVIEW', 'VERIFIED'] } } }),
+      prisma.admission.count({ where: { status: 'APPROVED' } }),
+      prisma.admission.count({ where: { status: 'REJECTED' } }),
+      prisma.news.count({ where: { status: 'PUBLISHED' } }),
+      prisma.event.count({ where: { startDate: { gte: new Date() }, status: 'PUBLISHED' } }),
+      prisma.notice.count({ where: { isPublished: true } }),
+      prisma.galleryAlbum.count({ where: { isActive: true } }),
+      prisma.teacher.count({ where: { isActive: true } }),
+      prisma.facility.count({ where: { isActive: true } }),
+      prisma.achievement.count({ where: { isVisible: true } }),
+      prisma.media.count(),
+      prisma.admission.findMany({
+        take: 6,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          referenceNumber: true,
+          studentFirstName: true,
+          studentLastName: true,
+          classApplied: true,
+          status: true,
+          createdAt: true,
+        },
+      }),
+      prisma.admission.findMany({
+        select: {
+          classApplied: true,
+          status: true,
+          createdAt: true,
+        },
+      }),
+      prisma.news.findMany({
+        take: 4,
+        orderBy: { createdAt: 'desc' },
+        select: { id: true, title: true, category: true, status: true, publishedAt: true },
+      }),
+      prisma.event.findMany({
+        take: 4,
+        orderBy: { startDate: 'asc' },
+        select: { id: true, title: true, startDate: true, location: true, status: true },
+      }),
+      prisma.page.findMany({
+        take: 4,
+        orderBy: { updatedAt: 'desc' },
+        select: { id: true, title: true, slug: true, status: true, updatedAt: true },
+      }),
+      getRecentAuditLogs(8),
+    ])
+
+    totalAdmissions = res[0]
+    newAdmissions = res[1]
+    underReviewAdmissions = res[2]
+    approvedAdmissions = res[3]
+    rejectedAdmissions = res[4]
+    publishedNews = res[5]
+    upcomingEvents = res[6]
+    activeNotices = res[7]
+    galleryAlbums = res[8]
+    totalTeachers = res[9]
+    totalFacilities = res[10]
+    totalAchievements = res[11]
+    totalMedia = res[12]
+    recentAdmissions = res[13]
+    admissionsList = res[14]
+    recentNews = res[15]
+    recentEvents = res[16]
+    recentPages = res[17]
+    recentLogs = res[18]
+  } catch (dbErr) {
+    console.warn('DB error in AdminDashboardPage, using defaults:', dbErr)
+  }
 
   // Process Admissions by Class
   const classCountMap: Record<string, number> = {}
